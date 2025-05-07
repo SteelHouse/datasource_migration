@@ -1,12 +1,11 @@
+"""
+One off to map DS11 to DS35
+"""
 import json
-import sys
-import traceback
-import time
-# from python.utils.db_util import execute_fetch_all_query, integration_prod_db_config, integration_qa_db_config
-# from python.utils.request_util import send, audience_service_qa_config, audience_service_prod_config, audience_service_path_config
 
 from utils.db_util import execute_fetch_all_query, integration_prod_db_config, integration_qa_db_config
-from utils.request_util import send, audience_service_qa_config, audience_service_prod_config, audience_service_path_config
+from utils.request_util import send, audience_service_qa_config, audience_service_prod_config, \
+    audience_service_path_config
 
 ####################################
 #         GLOBAL VARIABLES         #

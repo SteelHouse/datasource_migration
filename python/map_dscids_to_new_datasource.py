@@ -15,6 +15,9 @@ target_data_source_category_id
 3. Origin data source id
 4. Target data source id
 
+Prerequisites
+The target taxonomy table must be populated with the target data source category ids and tpa.categories (make sure replication to intprod has already happened) must include the target data source
+
 Implementation
 1. Retrieve all audiences expressions for active campaigns and for each expression:
 If the expression contains the origin category_id (origin data_source_id/data_source_category_id pair = origin_cat_key)
@@ -38,7 +41,8 @@ import traceback
 from python.activation_api.activation_api import get_distribution_managers, get_segments_from_distribution_manager, \
     remove_segments_from_distribution_manager
 from python.utils.db_util import execute_query, \
-    integration_prod_db_config, coredw_prod_db_config, integration_qa_db_config, execute_fetch_all_query
+    integration_prod_db_config, coredw_prod_db_config, integration_qa_db_config, execute_fetch_all_query, \
+    execute_fetch_all_with_vars_query
 from python.utils.request_util import send, audience_service_qa_config, audience_service_prod_config, \
     audience_service_path_config
 
@@ -56,7 +60,7 @@ MAX_SEGMENTS_PER_REQUEST = 100
 
 # Per run inputs - TODO move to command line args
 REMOVE_ORIGIN_PROVIDER_FROM_AUTOMATED_LR_UPDATES = False # Set this to true if all segments were remapped and liveramp version of these provider segments should not be used
-REMOVE_SEGMENTS_FROM_LR_DISTRIBUTION = False  # Set this to True when migrating liveramp segments
+REMOVE_SEGMENTS_FROM_LR_DISTRIBUTION = False  # TODO NOT_IMPLEMENTED Set this to True when migrating liveramp segments
 ORIGIN_PROVER_NAME = 'OnAudience'  # Only needed if migrating liveramp segments - must be given as listed in integrationprod.liveramp.non_restricted_providers
 ORIGIN_DATA_SOURCE_ID = ON_AUDIENCE_DATA_SOURCE_ID
 TARGET_DATA_SOURCE_ID = LIVERAMP_DATA_SOURCE_ID
@@ -264,6 +268,7 @@ def apply_mapping(mapping):
     where expression_type_id = 2 and (expression like '%%"data_source_id": 11%%')
     order by audience_id
     """, get_db_config())
+    # TODO: Use get_audience_expressions_by_data_source_id instead
     for i, audience_expression_row in enumerate(rows):
         audience_expression_audience_id = audience_expression_row[0]
         audience_expression_advertiser_id = audience_expression_row[2]
@@ -283,6 +288,17 @@ def apply_mapping(mapping):
         print(f'done - [{i + 1}/{len(rows)}]')
     print(json.dumps(impact, indent=4))
 
+def get_audience_expressions_by_data_source_id(data_source_id=ORIGIN_DATA_SOURCE_ID):
+    # TODO: Add advertiser join - does active_campaign_groups actually represent active campaigns?
+    return execute_fetch_all_with_vars_query("""
+    select a.audience_id, a.expression, cg.campaign_group_id from audience.audiences a
+    left join audience.audience_x_campaign_groups cg using (audience_id)
+    left join audience.active_campaign_groups ac using (campaign_group_id)
+    where ac.campaign_group_id is not null and expression_type_id = 2
+    and (expression like %s)
+    """, (f'%data_source_id\":{data_source_id},%',), get_db_config())
+    # very few expressions have spaces in them, but here is better filter: expression ~ '.*"data_source_id":\w?11\w?[,}].*'::text
+
 
 if __name__ == '__main__':
     print("ENV: %s" % ENV)
@@ -295,7 +311,7 @@ if __name__ == '__main__':
 
     print("Deprecating categories")
     cats_to_deprecate = list(origin_target_mapping.keys())
-    # deprecate_cats(ORIGIN_DATA_SOURCE_ID, cats_to_deprecate)
+    deprecate_cats(ORIGIN_DATA_SOURCE_ID, cats_to_deprecate)
     print("Deprecated %s categories" % len(cats_to_deprecate))
 
     if ORIGIN_DATA_SOURCE_ID == LIVERAMP_DATA_SOURCE_ID:
