@@ -1,5 +1,8 @@
 """
 Description
+
+NOTE: This script does not handle version 2 audience expressions!
+
 This script maps origin data source category ids for a given data source to target data source category ids in active audience campaign groups, then reapplies the audiences.
 All origin data source category ids are marked deprecated in the taxonomy tables.
 

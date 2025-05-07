@@ -1,5 +1,7 @@
 Description
 
+**NOTE: This script does not handle version 2 audience expressions!**
+
 map_dscids_to_new_datasource.py maps origin data source category ids for a given data source to target data source category ids in audiences, then reapplies the audiences.
 All origin data source category ids are marked deprecated in the taxonomy tables.
 
