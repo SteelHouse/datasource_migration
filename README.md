@@ -19,3 +19,17 @@ Inputs (Set GLOBAL VARIABLES)
 
 Prerequisites
 The target taxonomy table must be populated with the target data source category ids and tpa.categories (make sure replication to intprod has already happened) must include the target data source
+
+Instructions
+
+Add a file named `pass.ini` to the root of the project with the following contents adding passwords as needed (liveramp_authorization is not needed at the moment pending implementation):
+
+```ini
+[redshift_coredw]
+password=
+[qacoredb]
+password=
+[integrationprod]
+password=
+[liveramp_authorization]
+password=

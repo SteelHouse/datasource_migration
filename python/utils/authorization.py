@@ -23,7 +23,7 @@ def get_oauth_token():
 
 
 def get_token_and_cache():
-    request_body = {'grant_type': 'password', 'username': liveramp_auth_config['account_id'], 'password': liveramp_auth_config['secret'],
+    request_body = {'grant_type': 'password', 'username': liveramp_auth_config['account_id'], 'password': liveramp_auth_config['password'],
                     'scope': 'openid', 'client_id': liveramp_auth_config['client_id'], 'response_type': 'token'}
     response = requests.post(liveramp_auth_config['oauth_url'], data=request_body)
     if response.status_code == 200:
