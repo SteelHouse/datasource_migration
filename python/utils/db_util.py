@@ -4,14 +4,27 @@ import sys
 import psycopg2
 from psycopg2.extras import execute_batch
 
-from python.utils.config import load_config_with_pass
+from python.utils.config import load_config_with_pass, config
+
 
 integration_qa_db_config = load_config_with_pass('../config.ini', '../pass.ini', 'qacoredb')
 integration_prod_db_config = load_config_with_pass('../config.ini', '../pass.ini', 'integrationprod')
 coredw_prod_db_config = load_config_with_pass('../config.ini', '../pass.ini', 'redshift_coredw')
+env = config('../config.ini',  'environment')['env']
 
+def get_db_config(is_dw):
+    if is_dw:
+        return coredw_prod_db_config
+    else:
+        if env == 'qa':
+            return integration_qa_db_config
+        elif env == 'prod':
+            return integration_prod_db_config
+        else:
+            raise ValueError(f"Unknown environment: {env}")
 
-def execute_query(sql, query_vars, db_config):
+def execute_query(sql, query_vars, is_dw=False):
+    db_config=get_db_config(is_dw)
     conn = None
     try:
         conn = psycopg2.connect(**db_config)
@@ -26,7 +39,8 @@ def execute_query(sql, query_vars, db_config):
             conn.close()
 
 
-def execute_batch_query(sql, query_vars, db_config):
+def execute_batch_query(sql, query_vars, is_dw=False):
+    db_config=get_db_config(is_dw)
     conn = None
     try:
         conn = psycopg2.connect(**db_config)
@@ -41,11 +55,12 @@ def execute_batch_query(sql, query_vars, db_config):
             conn.close()
 
 
-def execute_fetch_all_query(sql, db_config):
-    return execute_fetch_all_with_vars_query(sql, None, db_config)
+def execute_fetch_all_query(sql, is_dw=False):
+    return execute_fetch_all_with_vars_query(sql, None, is_dw)
 
 
-def execute_fetch_all_with_vars_query(sql, query_vars, db_config):
+def execute_fetch_all_with_vars_query(sql, query_vars, is_dw=False):
+    db_config=get_db_config(is_dw)
     conn = None
     try:
         conn = psycopg2.connect(**db_config)
@@ -64,7 +79,8 @@ def execute_fetch_all_with_vars_query(sql, query_vars, db_config):
             conn.close()
 
 
-def mogrify_query(sql, query_vars, db_config):
+def mogrify_query(sql, query_vars, is_dw=False):
+    db_config=get_db_config(is_dw)
     conn = None
     try:
         conn = psycopg2.connect(**db_config)
@@ -79,11 +95,12 @@ def mogrify_query(sql, query_vars, db_config):
             conn.close()
 
 
-def mogrify_fetch_all_query(sql, db_config):
-    return mogrify_fetch_all_with_vars_query(sql, None, db_config)
+def mogrify_fetch_all_query(sql, is_dw=False):
+    return mogrify_fetch_all_with_vars_query(sql, None, is_dw)
 
 
-def mogrify_fetch_all_with_vars_query(sql, query_vars, db_config):
+def mogrify_fetch_all_with_vars_query(sql, query_vars, is_dw=False):
+    db_config=get_db_config(is_dw)
     conn = None
     try:
         conn = psycopg2.connect(**db_config)

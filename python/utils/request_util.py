@@ -8,15 +8,10 @@ import requests
 from python.utils.authorization import get_oauth_token, delete_cache
 from python.utils.config import config
 
-audience_service_qa_config = config('../config.ini', 'audience_service_qa')
-audience_service_prod_config = config('../config.ini', 'audience_service_prod')
-audience_service_path_config = config('../config.ini', 'audience_service_path_urls')
-
-
 def send(method, url, query_params=None, path_param_key=None, path_param_value=None, request_headers=None,
          json_data=None, do_lr_auth=False, retry_timer=5):
     """
-    Sends an http request. Retrieves auth token if needed (TODO: not tested yet).
+    Sends an http request. Retrieves LiveRamp auth token if needed (TODO: not tested yet).
     Attempts to retry the request if the status
     code is 502 or 504
     (default retry times are 5, 10, 20, and 40 seconds).
