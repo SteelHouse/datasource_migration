@@ -42,6 +42,8 @@ def get_data_source_table(data_source_id):
 def get_data_source_id(data_source_name):
     if data_source_name == 'Dstillery':
         return 18 # Dstillery was deleted from data sources already.
+    if data_source_name == 'OnAudience':
+        return 20 # OnAudience was deleted from data sources already.
     try:
         return execute_fetch_all_with_vars_query("""
             select data_source_id from audience.data_sources where name = %s
