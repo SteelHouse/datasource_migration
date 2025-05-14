@@ -44,11 +44,11 @@ def update_audience_expression(audience_expression_audience_id, expression_to_up
     as_config = get_audience_service_config()
     x_user_id = as_config['x_user_id']
     base_url = as_config['url']
-    # host = as_config['host']
+    host = as_config['host']
     url = base_url + audience_service_path_config['audience']
     print(f"[{env.upper()}] Updating audience {audience_expression_audience_id} at: {url}")
-    if url:
-        headers = {'X-User-Id': x_user_id}
+    if url and host:
+        headers = {'Host': host, 'X-User-Id': x_user_id}
         send(method='PUT', url=url,
              path_param_key="{audience_id}", path_param_value=audience_expression_audience_id,
              json_data={'expression': expression_to_update['expression'],

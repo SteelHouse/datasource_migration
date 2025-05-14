@@ -39,6 +39,7 @@ listed in the mapping csv, remove the origin category id and add the target cate
 TODOs
 TODO create version that can be run from command line
 TODO Test removal of segments from Liveramp distribution - implementation complete but not tested
+TODO does data source visibility need to be set in audience.data_sources?
 """
 import csv
 import json
@@ -61,7 +62,7 @@ REMOVE_SEGMENTS_FROM_LR_DISTRIBUTION = False  # TODO NOT_IMPLEMENTED Set this to
 
 ORIGIN_DATA_SOURCE_NAME = 'Dstillery'
 TARGET_DATA_SOURCE_NAME = 'LiveRamp'
-CSV_FILE_NAME = 'dstillery-to-lr-mapping.csv'
+CSV_FILE_NAME = 'dstillery-to-lr-mapping-test.csv'
 
 
 def deprecate_cats(data_source_id, data_source_category_ids):
