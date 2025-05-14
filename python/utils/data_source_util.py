@@ -40,10 +40,12 @@ def get_data_source_table(data_source_id):
     return table_name
 
 def get_data_source_id(data_source_name):
+    if data_source_name == 'Dstillery':
+        return 18 # Dstillery was deleted from data sources already.
     try:
         return execute_fetch_all_with_vars_query("""
             select data_source_id from audience.data_sources where name = %s
-        """, (data_source_name,))
+        """, (data_source_name,))[0][0]
     except Exception as e:
         print(f"Error fetching data source ID for {data_source_name}: {e}")
         return None

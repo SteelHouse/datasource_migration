@@ -44,6 +44,7 @@ TODO does data source visibility need to be set in audience.data_sources?
 import csv
 import json
 import sys
+from datetime import date
 
 from python.audience_service import update_audience_expression, get_all_audience_expressions
 from python.liveramp_service import remove_provider_from_liveramp_providers
@@ -62,7 +63,7 @@ REMOVE_SEGMENTS_FROM_LR_DISTRIBUTION = False  # TODO NOT_IMPLEMENTED Set this to
 
 ORIGIN_DATA_SOURCE_NAME = 'Dstillery'
 TARGET_DATA_SOURCE_NAME = 'LiveRamp'
-CSV_FILE_NAME = 'dstillery-to-lr-mapping-test.csv'
+CSV_FILE_NAME = 'dstillery-to-lr-mapping.csv'
 
 
 def deprecate_cats(data_source_id, data_source_category_ids):
@@ -79,8 +80,8 @@ def deprecate_cats_in_coredw(data_source_id, data_source_category_ids):
             schema = 'test'
         execute_query(f"""
             update {schema}.{table_name}
-            set deprecated = true
-            set updated_date = date.today()
+            set deprecated = true,
+            updated_date = current_date
             where data_source_category_id = ANY(%s);
         """, (data_source_category_ids,), True)
     except Exception as deprecate_exception:
@@ -143,7 +144,7 @@ def apply_mapping(mapping):
         return result
 
     impact = {}
-    rows = get_all_audience_expressions()
+    rows = get_all_audience_expressions(get_data_source_id(ORIGIN_DATA_SOURCE_NAME))
     for i, audience_expression_row in enumerate(rows):
         audience_expression_audience_id = audience_expression_row[0]
         audience_expression_advertiser_id = audience_expression_row[2]
