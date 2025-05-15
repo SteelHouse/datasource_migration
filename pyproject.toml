@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "datasource-migration"
+version = "0.1.0"
+description = "Data source migration tools including match finder"
+authors = ["MNTN"]
+readme = "README.md"
+packages = [
+    { include = "match_finder" }
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.14"
+pandas = "^2.2.3"
+scikit-learn = "^1.6.1"
+numpy = "^2.2.5"
+requests = "^2.31.0"
+
+[tool.poetry.scripts]
+create-mapping = "match_finder.create_mapping_file:main"
+find-matches = "match_finder.matcher:main"
+get-sizes = "match_finder.get_current_sizes:fetch_and_store_cat_sizes"
+enrich-sizes = "match_finder.enrich_with_sizes:enrich_data_with_sizes"
+enrich-mapping = "match_finder.enrich_mapping_with_sizes:main"
+find-and-enrich = "match_finder.find_and_enrich:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
