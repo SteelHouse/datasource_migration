@@ -4,3 +4,5 @@
 /needs_match/data.csv
 /suggested_match/data.csv
 /total_match_options/data.csv
+**/.DS_Store
+**/*.DS_Store
