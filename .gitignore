@@ -7,3 +7,4 @@
 /match_finder/similarity_too_low/data.csv
 **/.DS_Store
 **/*.DS_Store
+*.pyc 

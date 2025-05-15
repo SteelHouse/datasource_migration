@@ -62,7 +62,7 @@ Each CSV file should have three columns in this order:
 
 ### Available Commands
 
-The tool provides two main commands:
+The tool provides several commands:
 
 1. Find Matches:
    ```bash
@@ -90,6 +90,55 @@ The tool provides two main commands:
    - The mapping file contains just the category IDs needed for migration:
      - origin_data_source_category_id
      - target_data_source_category_id
+
+3. Get Current Sizes:
+   ```bash
+   poetry run get-sizes
+   ```
+   This command:
+   - Fetches current audience sizes for all data sources
+   - Stores the size data in `match_finder/current_cat_sizes/data.json`
+   - DOES NOT NEED TO BE CALLED DIRECTLY
+
+4. Enrich with Sizes:
+   ```bash
+   poetry run enrich-sizes
+   ```
+   This command:
+   - Calls Get Current Sizes to pull size file
+   - Enriches the match data with audience size information
+   - Processes both `similarity_too_low/data.csv` and `suggested_match/data.csv`
+   - Adds size information and calculates size changes
+   - Creates new files with `_with_size.csv` suffix in the same directories
+
+5. Enrich Mapping with Sizes:
+   ```bash
+   poetry run enrich-mapping <source_id> <target_id> <mapping_file>
+   ```
+   This command:
+   - Calls Get Current Sizes to pull size file
+   - Takes a specific mapping file from the `mapping_files` directory
+   - Enriches it with audience size information from both source and target data sources
+   - Creates a new file in the `qa_size` directory with timestamp prefix
+   - Shows statistics about size changes between source and target audiences
+   Example:
+   ```bash
+   poetry run enrich-mapping 18 35 dstillery-to-lr-mapping.csv
+   ```
+
+6. Find and Enrich:
+   ```bash
+   # Use default similarity threshold (0.60)
+   poetry run find-and-enrich
+
+   # Or specify a custom similarity threshold (between 0 and 1)
+   poetry run find-and-enrich 0.75
+   ```
+   This command:
+   - Combines the functionality of `find-matches` and `enrich-sizes`
+   - First finds matches using the specified similarity threshold
+   - Then automatically enriches the results with size information
+   - Produces both match files and their size-enriched versions in one step
 
 ### Typical Workflow
 
