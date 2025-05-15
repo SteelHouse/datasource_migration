@@ -3,8 +3,10 @@
 /oauth_token_cache.json
 /match_finder/needs_match/data.csv
 /match_finder/suggested_match/data.csv
+/match_finder/suggested_match/data_with_size.csv
 /match_finder/total_match_options/data.csv
 /match_finder/similarity_too_low/data.csv
+/match_finder/similarity_too_low/data_with_size.csv
 **/.DS_Store
 **/*.DS_Store
 *.pyc 
