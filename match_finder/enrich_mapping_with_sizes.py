@@ -14,11 +14,11 @@ def calculate_size_change(original_size, new_size):
 def enrich_mapping_with_sizes(source_id, target_id, mapping_file_name):
     # First ensure we have current size data by running get-sizes
     subprocess.run(['poetry', 'run', 'get-sizes'], check=True)
-    # Read the audience size data
+
     with open('match_finder/current_cat_sizes/data.json', 'r') as f:
         size_data = json.load(f)
     
-    # Create a function to get audience size for a data source and category
+    # Get audience size for a data source and category
     def get_audience_size(data_source_id, cat_id):
         try:
             return size_data['data_source_counts'][str(data_source_id)]['counts'][str(cat_id)]
@@ -35,7 +35,6 @@ def enrich_mapping_with_sizes(source_id, target_id, mapping_file_name):
     output_file = f'{output_dir}/{timestamp}_{base_name}_with_size.csv'
     
     try:
-        # Read the CSV file
         df = pd.read_csv(input_file)
         
         # Add size columns using the provided source_id and target_id
@@ -59,7 +58,6 @@ def enrich_mapping_with_sizes(source_id, target_id, mapping_file_name):
         df.to_csv(output_file, index=False)
         print(f"Successfully processed {input_file} -> {output_file}")
         
-        # Print some statistics
         print(f"\nStatistics for {mapping_file_name}:")
         print(f"Total rows processed: {len(df)}")
         print(f"Average size change: {df['size_change'].mean():.2f}%")

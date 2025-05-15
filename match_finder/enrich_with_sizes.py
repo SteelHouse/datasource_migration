@@ -17,7 +17,7 @@ def enrich_data_with_sizes():
     with open('match_finder/current_cat_sizes/data.json', 'r') as f:
         size_data = json.load(f)
     
-    # Create a function to get audience size for a data source and category
+    # Get audience size for a data source and category
     def get_audience_size(data_source_id, cat_id):
         try:
             return size_data['data_source_counts'][str(data_source_id)]['counts'][str(cat_id)]
@@ -32,7 +32,6 @@ def enrich_data_with_sizes():
     
     for input_file, output_file in files_to_process:
         try:
-            # Read the CSV file
             df = pd.read_csv(input_file)
             
             # Add size columns
@@ -56,7 +55,6 @@ def enrich_data_with_sizes():
             df.to_csv(output_file, index=False)
             print(f"Successfully processed {input_file} -> {output_file}")
             
-            # Print some statistics
             print(f"\nStatistics for {os.path.basename(input_file)}:")
             print(f"Total rows processed: {len(df)}")
             print(f"Average size change: {df['size_change'].mean():.2f}%")

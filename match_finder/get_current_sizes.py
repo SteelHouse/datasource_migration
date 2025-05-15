@@ -4,24 +4,15 @@ import os
 from datetime import datetime
 
 def fetch_and_store_cat_sizes():
-    # Define the URL
     url = "http://a48e0dc5459e74ed9a460f718d19f2e8-a863d546fb12e42c.elb.us-west-2.amazonaws.com/totals"
-    
-    # Add the Host header
     headers = {
         "Host": "audience-service-prod.core-prod.k8.steelhouse.com"
     }
     
     try:
-        # GET request with Host header
         response = requests.get(url, headers=headers)
         response.raise_for_status()
-        
-        # Parse the JSON response
         data = response.json()
-        
-        # Create timestamp for the filename
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         
         # Ensure the directory exists
         output_dir = "match_finder/current_cat_sizes"
