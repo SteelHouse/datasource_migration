@@ -146,14 +146,15 @@ The tool provides several commands:
 2. Place the files in their respective directories:
    - `match_finder/needs_match/data.csv`
    - `match_finder/total_match_options/data.csv`
-3. Run `poetry run find-matches [threshold]` to generate matches
+3. Run `poetry run find-and-enrich [threshold]` to generate matches and size data
    - Optionally specify a similarity threshold (default is 0.60)
    - Higher threshold = stricter matching
    - Lower threshold = more permissive matching
-4. Review the matches:
-   - Check `suggested_match/data.csv` for good matches
-   - Review `similarity_too_low/data.csv` for potential manual review
-5. If satisfied with the matches, run `poetry run create-mapping <name>` to create the final mapping file
+4. Review the matches and size data:
+   - Check `suggested_match/data_with_size.csv` for good matches and their audience sizes
+   - Review `similarity_too_low/data_with_size.csv` for potential manual review
+   - Pay attention to significant size differences between source and target audiences
+5. If satisfied with the matches and size comparisons, run `poetry run create-mapping <name>` to create the final mapping file
 6. Find your mapping file in `mapping_files/<name>.csv`
 
 ### Notes
