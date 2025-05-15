@@ -1,8 +1,8 @@
 /.idea/
 /pass.ini
 /oauth_token_cache.json
-/needs_match/data.csv
-/suggested_match/data.csv
-/total_match_options/data.csv
+/match_finder/needs_match/data.csv
+/match_finder/suggested_match/data.csv
+/match_finder/total_match_options/data.csv
 **/.DS_Store
 **/*.DS_Store
