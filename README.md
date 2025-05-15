@@ -18,6 +18,7 @@ password=
 password=
 [liveramp_authorization]
 password=
+```
 
 ## Installation
 
@@ -65,12 +66,18 @@ The tool provides two main commands:
 
 1. Find Matches:
    ```bash
+   # Use default similarity threshold (0.60)
    poetry run find-matches
+
+   # Or specify a custom similarity threshold (between 0 and 1)
+   poetry run find-matches 0.75
    ```
    This command:
    - Reads segments from both data files
    - Uses TF-IDF and cosine similarity to find the best matches
-   - Saves results to `match_finder/suggested_match/data.csv`
+   - Splits results based on similarity threshold:
+     - Matches above threshold → `match_finder/suggested_match/data.csv`
+     - Matches below threshold → `match_finder/similarity_too_low/data.csv`
    - Includes similarity scores to help evaluate match quality
 
 2. Create Mapping File:
@@ -90,10 +97,13 @@ The tool provides two main commands:
 2. Place the files in their respective directories:
    - `match_finder/needs_match/data.csv`
    - `match_finder/total_match_options/data.csv`
-3. Run `poetry run find-matches` to generate matches
-4. Review the matches in `match_finder/suggested_match/data.csv`
-   - Pay attention to the similarity scores (higher is better)
-   - Manually verify some of the matches
+3. Run `poetry run find-matches [threshold]` to generate matches
+   - Optionally specify a similarity threshold (default is 0.60)
+   - Higher threshold = stricter matching
+   - Lower threshold = more permissive matching
+4. Review the matches:
+   - Check `suggested_match/data.csv` for good matches
+   - Review `similarity_too_low/data.csv` for potential manual review
 5. If satisfied with the matches, run `poetry run create-mapping <name>` to create the final mapping file
 6. Find your mapping file in `mapping_files/<name>.csv`
 
@@ -102,10 +112,13 @@ The tool provides two main commands:
 - Similarity scores range from 0 to 1:
   - 1.0 = perfect match
   - >0.8 = very good match
-  - >0.6 = decent match
+  - >0.6 = decent match (default threshold)
   - <0.5 = weak match (may need manual review)
 - The matcher uses semantic similarity, so it can match segments even when names aren't exactly the same
 - Always review the matches before using them in production
+- Consider adjusting the similarity threshold based on your needs:
+  - Increase for higher confidence matches
+  - Decrease if you're missing too many potential matches
 
 Description
 

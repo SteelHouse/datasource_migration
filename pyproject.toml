@@ -15,7 +15,8 @@ scikit-learn = "^1.6.1"
 numpy = "^2.2.5"
 
 [tool.poetry.scripts]
-create-mapping = "match_finder.create_mapping_file:create_mapping"
+create-mapping = "match_finder.create_mapping_file:main"
+find-matches = "match_finder.matcher:main"
 
 [build-system]
 requires = ["poetry-core"]
