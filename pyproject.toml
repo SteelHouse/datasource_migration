@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "datasource-migration"
+version = "0.1.0"
+description = "Data source migration tools including match finder"
+authors = ["MNTN"]
+readme = "README.md"
+packages = [
+    { include = "match_finder" }
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.14"
+pandas = "^2.2.3"
+scikit-learn = "^1.6.1"
+numpy = "^2.2.5"
+
+[tool.poetry.scripts]
+create-mapping = "match_finder.create_mapping_file:create_mapping"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
